@@ -1,22 +1,38 @@
 import './App.css';
-import { useState, useEffects } from 'react';
+import { useState } from 'react';
 import { Grid, Button, List, Container, TextField, FormGroup, ListItem, FormControlLabel, Checkbox } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import DeleteIcon from '@mui/icons-material/Delete';
 
 function App() {
-    const [item, setItem] = useState('');
+    const [item, setItem] = useState({
+        item: '',
+        checked: false
+    });
     const [list, setList] = useState([]);
  
     const handleItemChange = (e) => {
-        setItem(e.target.value);
+        setItem({...item, item: e.target.value});
+    }
+
+    const handleListChange = () => {
+        const updateList = [
+            ...list, {
+                id: list.length + 1,
+                item: item.item,
+                checked: false
+            }
+        ];
+        setList(updateList);
     }
 
     const addItem = () => {
-        if (item.length) {
+        if (item.item.length) {
             if (! findDuplicates()) {
-                setList([...list, item]);
-                setItem('');
+                handleListChange();
+                setItem({
+                    item: '',
+                    checked: false
+                });
             } else {
                 alert('You have already added this item to your list!');
             }
@@ -26,8 +42,8 @@ function App() {
     }
 
     const findDuplicates = () => {
-        const newList = list.map(el => el.toLowerCase());
-        const duplicateItem = newList.includes(item.toLowerCase());
+        const newList = list.map(el => el.item.toLowerCase());
+        const duplicateItem = newList.includes(item.item.toLowerCase());
 
         return duplicateItem ? true : false;
     }
@@ -43,7 +59,7 @@ function App() {
                                     id="item"
                                     label="Item"
                                     variant="filled"
-                                    value={item}
+                                    value={item.item}
                                     onChange={handleItemChange}
                                 />
                             </FormGroup>
@@ -53,16 +69,19 @@ function App() {
                             >
                                 <AddCircleIcon></AddCircleIcon>
                             </Button>
-                            <Button
-                                variant="contained"
-                            >
-                                <DeleteIcon></DeleteIcon>
-                            </Button>
                         </Container>
                         <Container>
-                            {list.map((item) => 
-                                <p>{item}</p>
-                            )}
+                            <List>
+                                {list.map((item) => 
+                                    <ListItem>
+                                        <FormControlLabel
+                                            control={<Checkbox />}
+                                            label={item.item}
+                                            checked={item.checked}
+                                        />
+                                    </ListItem>
+                                )}
+                            </List>
                         </Container>
                     </Grid>
                 </Grid>
