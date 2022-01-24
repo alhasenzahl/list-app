@@ -9,6 +9,7 @@ function App() {
         checked: false
     });
     const [list, setList] = useState([]);
+    // const [currentItem, setCurrentItem] = useState({});
  
     const handleItemChange = (e) => {
         setItem({...item, item: e.target.value});
@@ -23,6 +24,15 @@ function App() {
             }
         ];
         setList(updateList);
+    }
+
+    const handleCheckboxChange = (todo) => {
+        const updatedCheckboxes = list.map((el) => 
+            todo.item === el.item ? {
+                ...el, checked: ! el.checked
+            } : el
+        );
+        setList(updatedCheckboxes);
     }
 
     const addItem = () => {
@@ -73,11 +83,12 @@ function App() {
                         <Container>
                             <List>
                                 {list.map((item) => 
-                                    <ListItem>
+                                    <ListItem key={item.item}>
                                         <FormControlLabel
                                             control={<Checkbox />}
                                             label={item.item}
                                             checked={item.checked}
+                                            onChange={() => handleCheckboxChange(item)}
                                         />
                                     </ListItem>
                                 )}
