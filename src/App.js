@@ -2,6 +2,7 @@ import './App.css';
 import { useState } from 'react';
 import { Grid, Button, List, Container, TextField, FormGroup, ListItem, FormControlLabel, Checkbox } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function App() {
     const [item, setItem] = useState({
@@ -9,7 +10,6 @@ function App() {
         checked: false
     });
     const [list, setList] = useState([]);
-    // const [currentItem, setCurrentItem] = useState({});
  
     const handleItemChange = (e) => {
         setItem({...item, item: e.target.value});
@@ -58,6 +58,17 @@ function App() {
         return duplicateItem ? true : false;
     }
 
+    // Map thru list array
+    // Find items with checked set to true
+    // Filter checked items out of array
+    // Return new array with only unchecked items present
+
+    const filterOutCheckedItems = () => {
+        const filteredList = list.filter((el) => ! el.checked);
+
+        setList(filteredList);
+    }
+
     return (
         <div className="App">
             <Grid container xs={12} rowSpacing={1}>
@@ -78,6 +89,12 @@ function App() {
                                 onClick={addItem}
                             >
                                 <AddCircleIcon></AddCircleIcon>
+                            </Button>
+                            <Button
+                                variant="contained"
+                                onClick={filterOutCheckedItems}
+                            >
+                                <DeleteIcon></DeleteIcon>
                             </Button>
                         </Container>
                         <Container>
