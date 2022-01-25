@@ -58,11 +58,6 @@ function App() {
         return duplicateItem ? true : false;
     }
 
-    // Map thru list array
-    // Find items with checked set to true
-    // Filter checked items out of array
-    // Return new array with only unchecked items present
-
     const filterOutCheckedItems = () => {
         const filteredList = list.filter((el) => ! el.checked);
 
