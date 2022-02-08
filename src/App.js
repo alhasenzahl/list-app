@@ -10,6 +10,7 @@ function App() {
         checked: false
     });
     const [list, setList] = useState([]);
+    const [isChecked, setIsChecked] = useState(false);
  
     const handleItemChange = (e) => {
         setItem({...item, item: e.target.value});
@@ -59,10 +60,25 @@ function App() {
     }
 
     const filterOutCheckedItems = () => {
-        const filteredList = list.filter((el) => ! el.checked);
+        const filteredList = list.filter((el) => ! el.checked); // Produces unchecked items to make new list with
+        console.log(filteredList);
 
         setList(filteredList);
     }
+
+    // Maybe...????
+    const isItemChecked = () => {
+        const checkedList = list.map((item) => {
+            item.checked ? setIsChecked(true) : setIsChecked(false)
+        });
+    }
+
+    // Want to have a check for the delete button for when nothing is checked...
+    // If none of the items in the filtered list are checked
+    // Then send an alert when they click the delete button
+    // Otherwise, delete the checked off items from the list
+
+    // COULD DO: Have the button be disabled if nothing is checked??
 
     return (
         <div className="App">
