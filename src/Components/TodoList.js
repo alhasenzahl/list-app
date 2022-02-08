@@ -1,53 +1,45 @@
 import { useState } from 'react';
 // import Item from './Item';
 import { Grid, Button, List, Container, TextField, FormGroup, ListItem, FormControlLabel, Checkbox } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function TodoList() {
     const [item, setItem] = useState({
         item: '',
         checked: false
     });
-    const [list, setList] = useState([{}]);
-
+    const [list, setList] = useState([]);
+ 
     const handleItemChange = (e) => {
         setItem({...item, item: e.target.value});
     }
 
-    const updateCheckedState = (el) => {
-        list.forEach((item) => {
-            if (item.item === el.item) { // Check to see that you have the right item in list
-                if (item.checked) {
-            //         // Do a setList() here to set that item's checked key to true.
-            //         // Check status of item's checkbox state, if it's checked then make item state true inside list state
-            //         console.log('checked');                    console.log('checked');
-                } else {
-                    console.log('not checked');
-                }// if it's not checked then make item state false inside list state
-            //       // Do a setList() here to set that item's checked key to false.
-            }
-        });
-    }
-
-    const handleListAddition = () => {
+    const handleListChange = () => {
         const updateList = [
             ...list, {
                 id: list.length + 1,
                 item: item.item,
-                checked: item.checked
+                checked: false
             }
         ];
         setList(updateList);
     }
 
+    const handleCheckboxChange = (todo) => {
+        const updatedCheckboxes = list.map((el) => 
+            todo.item === el.item ? {
+                ...el, checked: ! el.checked
+            } : el
+        );
+        setList(updatedCheckboxes);
+    }
+
     const addItem = () => {
         if (item.item.length) {
             if (! findDuplicates()) {
-                setList([...list, item]);
-                handleListAddition();
-
-                setItem({...item,
+                handleListChange();
+                setItem({
                     item: '',
                     checked: false
                 });
@@ -64,6 +56,16 @@ function TodoList() {
         const duplicateItem = newList.includes(item.item.toLowerCase());
 
         return duplicateItem ? true : false;
+    }
+
+    const filterOutCheckedItems = () => {
+        const filteredList = list.filter((el) => ! el.checked); // Produces unchecked items to make new list with
+
+        if (filteredList.length === list.length) {
+            alert('You have no completed items to delete!');
+        } else {
+            setList(filteredList);
+        }
     }
 
     return (
@@ -86,22 +88,21 @@ function TodoList() {
                 </Button>
                 <Button
                     variant="contained"
+                    onClick={filterOutCheckedItems}
                 >
                     <DeleteIcon></DeleteIcon>
                 </Button>
             </Container>
             <Container>
                 <List>
-                    {list.map((item) =>
-                        // <Item key={item.id} item={item.item} checked={item.checked} changeCheckedState={changeCheckedState}></Item>
-                        <ListItem key={item.id}>
+                    {list.map((item) => 
+                        <ListItem key={item.item}>
                             <FormControlLabel
                                 control={<Checkbox />}
                                 label={item.item}
                                 checked={item.checked}
-                                onChange={(el) => updateCheckedState(item)}
+                                onChange={() => handleCheckboxChange(item)}
                             />
-                            {JSON.stringify(item)}
                         </ListItem>
                     )}
                 </List>
